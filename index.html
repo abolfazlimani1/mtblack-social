@@ -1,22 +1,123 @@
-
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MTBlack AI</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: "Tahoma", sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #4dc3ff;
+      margin-top: 20px;
+    }
+    #chatbox {
+      width: 90%;
+      max-width: 600px;
+      height: 70vh;
+      overflow-y: auto;
+      background: #1a1a1a;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .msg {
+      margin: 10px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .user { background: #0077ff; align-self: flex-end; }
+    .bot { background: #333; align-self: flex-start; }
+    #form {
+      margin-top: auto;
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      width: 100%;
+      max-width: 600px;
+    }
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #00bfff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="chat-container">
-    <h1>چت با MTBlack AI</h1>
-    <div id="chat-box"></div>
-    <div class="input-area">
-      <input type="text" id="user-input" placeholder="متنت رو بنویس..." />
-      <button onclick="sendMessage()">ارسال</button>
-    </div>
-  </div>
+  <h1>MTBlack AI 🤖</h1>
+  <div id="chatbox"></div>
+  <form id="form">
+    <input type="text" id="userInput" placeholder="بپرس..." autocomplete="off" />
+    <button type="submit">ارسال</button>
+  </form>
 
-  <script src="script.js"></script>
+  <script>
+    const form = document.getElementById('form');
+    const chatbox = document.getElementById('chatbox');
+    const input = document.getElementById('userInput');
+    const API_KEY = "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";
+
+    function addMessage(text, sender = 'user') {
+      const msg = document.createElement('div');
+      msg.className = `msg ${sender}`;
+      msg.innerText = text;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = input.value.trim();
+      if (!question) return;
+
+      addMessage(question, 'user');
+      input.value = '';
+
+      // پاسخ خاص برای سوال مشخص
+      if (question.includes("تورو کی ساخته") || question.includes("کی ساختت")) {
+        addMessage("ابوالفضل ایمانی ❤️", 'bot');
+        return;
+      }
+
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: question }],
+          }),
+        });
+
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || "پاسخی دریافت نشد";
+        addMessage(reply, 'bot');
+      } catch (err) {
+        addMessage("خطا در ارتباط با سرور", 'bot');
+      }
+    });
+  </script>
 </body>
 </html>
