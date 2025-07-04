@@ -1,1 +1,182 @@
-<!DOCTYPE html><html><head><title>MTBlack</title></head><body><h1>خانه - MTBlack</h1></body></html>
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mtblack - پیام‌رسان</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js"></script>
+  <style>
+    body { direction: rtl; font-family: Arial, sans-serif; }
+    .chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center">mtblack</h1>
+
+    <!-- فرم ورود/ثبت‌نام -->
+    <div id="auth-section">
+      <input id="email" type="email" placeholder="ایمیل" class="w-full pENSION: 10.14.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js"></script>
+  <style>
+    body { direction: rtl; font-family: Arial, sans-serif; }
+    .chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center">mtblack</h1>
+
+    <!-- فرم ورود/ثبت‌نام -->
+    <div id="auth-section">
+      <input id="email" type="email" placeholder="ایمیل" class="w-full p-2 mb-2 border rounded" />
+      <input id="password" type="password" placeholder="رمز عبور" class="w-full p-2 mb-2 border rounded" />
+      <input id="displayName" type="text" placeholder="نام نمایشی" class="w-full p-2 mb-2 border rounded" />
+      <button onclick="register()" class="w-full p-2 bg-blue-500 text-white rounded mb-2">ثبت‌نام</button>
+      <button onclick="login()" class="w-full p-2 bg-green-500 text-white rounded mb-2">ورود</button>
+      <button onclick="resetPassword()" class="w-full p-2 bg-gray-500 text-white rounded">فراموشی رمز</button>
+    </div>
+
+    <!-- پروفایل و چت -->
+    <div id="main-section" class="hidden">
+      <img id="profile-picture" src="https://via.placeholder.com/50" alt="Profile" class="w-12 h-12 rounded-full mb-2" />
+      <h2 id="display-name" class="text-lg font-semibold"></h2>
+      <input type="file" id="profile-upload" class="mb-2" />
+      <button onclick="uploadProfilePicture()" class="p-2 bg-blue-500 text-white rounded mb-2">آپلود عکس پروفایل</button>
+      <div class="chat-box" id="chat-box"></div>
+      <input id="message" type="text" placeholder="پیام خود را بنویسید" class="w-full p-2 mb-2 border rounded" />
+      <button onclick="sendMessage()" class="w-full p-2 bg-blue-500 text-white rounded">ارسال</button>
+      <button onclick="logout()" class="w-full p-2 bg-red-500 text-white rounded mt-2">خروج</button>
+    </div>
+  </div>
+
+  <script>
+    // تنظیمات Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCcQRSbI18O4xkvcrOApjtAj4EbR1J4dDo",
+      authDomain: "mtblack-630c5.firebaseapp.com",
+      projectId: "mtblack-630c5",
+      storageBucket: "mtblack-630c5.appspot.com",
+      messagingSenderId: "689920201467",
+      appId: "1:689920201467:web:a13f864568e508f495565e",
+      measurementId: "G-YWHP0Y6KMY"
+    };
+
+    // مقداردهی اولیه Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // بررسی وضعیت ورود
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('main-section').classList.remove('hidden');
+        document.getElementById('display-name').textContent = user.displayName || 'کاربر';
+        loadProfilePicture(user.uid);
+        loadMessages();
+      } else {
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('main-section').classList.add('hidden');
+      }
+    });
+
+    // ثبت‌نام
+    function register() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const displayName = document.getElementById('displayName').value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          userCredential.user.updateProfile({ displayName });
+          db.collection('users').doc(userCredential.user.uid).set({ displayName });
+          alert('ثبت‌نام با موفقیت انجام شد');
+        })
+        .catch((error) => alert('خطا: ' + error.message));
+    }
+
+    // ورود
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => alert('ورود با موفقیت انجام شد'))
+        .catch((error) => alert('خطا: ' + error.message));
+    }
+
+    // فراموشی رمز
+    function resetPassword() {
+      const email = document.getElementById('email').value;
+      auth.sendPasswordResetEmail(email)
+        .then(() => alert('ایمیل بازیابی رمز ارسال شد'))
+        .catch((error) => alert('خطا: ' + error.message));
+    }
+
+    // خروج
+    function logout() {
+      auth.signOut().then(() => alert('با موفقیت خارج شدید'));
+    }
+
+    // آپلود عکس پروفایل
+    function uploadProfilePicture() {
+      const file = document.getElementById('profile-upload').files[0];
+      if (file && auth.currentUser) {
+        const storageRef = storage.ref(`profiles/${auth.currentUser.uid}`);
+        storageRef.put(file)
+          .then(() => storageRef.getDownloadURL())
+          .then((url) => {
+            document.getElementById('profile-picture').src = url;
+            db.collection('users').doc(auth.currentUser.uid).update({ profilePicture: url });
+          })
+          .catch((error) => alert('خطا در آپلود: ' + error.message));
+      }
+    }
+
+    // بارگذاری عکس پروفایل
+    function loadProfilePicture(uid) {
+      db.collection('users').doc(uid).get()
+        .then((doc) => {
+          if (doc.exists && doc.data().profilePicture) {
+            document.getElementById('profile-picture').src = doc.data().profilePicture;
+          }
+        });
+    }
+
+    // ارسال پیام
+    function sendMessage() {
+      const message = document.getElementById('message').value;
+      if (message && auth.currentUser) {
+        db.collection('messages').add({
+          sender: auth.currentUser.uid,
+          displayName: auth.currentUser.displayName,
+          content: message,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        document.getElementById('message').value = '';
+      }
+    }
+
+    // بارگذاری پیام‌ها
+    function loadMessages() {
+      db.collection('messages')
+        .orderBy('createdAt', 'asc')
+        .onSnapshot((snapshot) => {
+          const chatBox = document.getElementById('chat-box');
+          chatBox.innerHTML = '';
+          snapshot.forEach((doc) => {
+            const msg = doc.data();
+            const p = document.createElement('p');
+            p.textContent = `${msg.displayName}: ${msg.content}`;
+            chatBox.appendChild(p);
+          });
+          chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    }
+  </script>
+</body>
+</html>
