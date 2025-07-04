@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTBlack</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MTBlack Social</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
+    <div class="app">
         <h1>Welcome to MTBlack</h1>
-    </header>
-    <main>
-        <section id="login">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit">Login</button>
-            </form>
-        </section>
-        <section id="explore">
-            <h2>Explore</h2>
-            <div id="posts"></div>
-        </section>
-        <section id="profile">
-            <h2>Your Profile</h2>
-            <div id="userProfile"></div>
-        </section>
-    </main>
+        <div id="auth">
+            <input type="email" id="email" placeholder="Email" />
+            <input type="password" id="password" placeholder="Password" />
+            <button onclick="login()">Login</button>
+            <button onclick="signup()">Sign Up</button>
+        </div>
+        <div id="postArea" style="display:none;">
+            <input type="text" id="username" placeholder="Username (for first time)" />
+            <input type="file" id="postImage" />
+            <button onclick="uploadPost()">Post</button>
+            <div id="feed"></div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
