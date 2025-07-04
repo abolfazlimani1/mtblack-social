@@ -1,35 +1,22 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MTBlack</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MTBlack AI</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>MTBlack Social</h1>
-    </header>
-    <main>
-        <section id="auth">
-            <h2>Login / Register</h2>
-            <input type="email" id="email" placeholder="Email" />
-            <input type="password" id="password" placeholder="Password" />
-            <button onclick="login()">Login</button>
-            <button onclick="register()">Register</button>
-        </section>
-        <section id="post">
-            <h2>Create Post</h2>
-            <input type="text" id="postText" placeholder="What's on your mind?" />
-            <input type="file" id="postImage" />
-            <button onclick="uploadPost()">Post</button>
-        </section>
-        <section id="feed">
-            <h2>All Posts</h2>
-            <div id="posts"></div>
-        </section>
-    </main>
-    <script type="module" src="app.js"></script>
+  <div class="chat-container">
+    <h1>چت با MTBlack AI</h1>
+    <div id="chat-box"></div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="متنت رو بنویس..." />
+      <button onclick="sendMessage()">ارسال</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
