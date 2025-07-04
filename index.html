@@ -1,31 +1,35 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MTBlack Social</title>
+    <title>MTBlack</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="app">
-        <h1>Welcome to MTBlack</h1>
-        <div id="auth">
+    <header>
+        <h1>MTBlack Social</h1>
+    </header>
+    <main>
+        <section id="auth">
+            <h2>Login / Register</h2>
             <input type="email" id="email" placeholder="Email" />
             <input type="password" id="password" placeholder="Password" />
             <button onclick="login()">Login</button>
-            <button onclick="signup()">Sign Up</button>
-        </div>
-        <div id="postArea" style="display:none;">
-            <input type="text" id="username" placeholder="Username (for first time)" />
+            <button onclick="register()">Register</button>
+        </section>
+        <section id="post">
+            <h2>Create Post</h2>
+            <input type="text" id="postText" placeholder="What's on your mind?" />
             <input type="file" id="postImage" />
             <button onclick="uploadPost()">Post</button>
-            <div id="feed"></div>
-        </div>
-    </div>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="script.js"></script>
+        </section>
+        <section id="feed">
+            <h2>All Posts</h2>
+            <div id="posts"></div>
+        </section>
+    </main>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
